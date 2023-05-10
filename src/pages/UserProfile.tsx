@@ -18,7 +18,7 @@ interface UserTypes {
 
 const UserProfile = () => {
 	const [user, setUser] = useState<UserTypes>()
-	const { userId } = useParams()
+	const { userId } = useParams<any>()
 	const token = useSelector((state: any) => state.token)
 	const userLs = useSelector((state: any) => state.user)
 
@@ -35,12 +35,12 @@ const UserProfile = () => {
 		getUser()
 	}, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-	if (!user) return null
+	// if (!user) return null
 
 	return (
 		<Grid container spacing={4}>
 			<Grid xs={4} item>
-				<User userId={userId} avatarUrl={user.avatarUrl} />
+				<User userId={userId} avatarUrl={user?.avatarUrl} />
 				<Box m='2rem 0' />
 				<Friends userId={userId} />
 			</Grid>
@@ -48,9 +48,9 @@ const UserProfile = () => {
 				{userId === userLs._id ? (
 					<CreatePost avatarUrl={undefined} />
 				) : (
-					<h1>{user.fullName}'s posts</h1>
+					<h1>{user?.fullName}'s posts</h1>
 				)}
-				<Posts userId={userId} isProfile />
+				<Posts userId={userId} />
 			</Grid>
 		</Grid>
 	)

@@ -24,8 +24,8 @@ interface User {
 }
 
 interface Props {
-	userId: string
-	avatarUrl: string
+	userId?: string
+	avatarUrl?: string
 }
 
 const User: FC<Props> = ({ userId, avatarUrl }) => {

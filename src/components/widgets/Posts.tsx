@@ -19,7 +19,7 @@ interface Post {
 }
 
 interface Props {
-	userId: string
+	userId: string | undefined
 }
 
 const Posts: FC<Props> = ({ userId }) => {

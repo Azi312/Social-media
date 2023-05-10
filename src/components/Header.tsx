@@ -9,6 +9,7 @@ import {
 	Select,
 	MenuItem,
 	FormControl,
+	FormControlProps,
 	useTheme,
 	Container,
 } from '@mui/material'
@@ -23,8 +24,8 @@ import {
 import { setMode, setLogout, setSearch } from '../state'
 import FlexBetween from './FlexBetween'
 
-export const Header = () => {
-	const user = useSelector((state: any) => state.user)
+export const Header: React.FC = () => {
+	const fullName = useSelector((state: any) => state.user.fullName)
 	const search = useSelector((state: any) => state.search)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
@@ -43,7 +44,11 @@ export const Header = () => {
 	const primaryLight = theme.palette.primary.light
 	const alt = theme.palette.background.alt
 	return (
-		<Box backgroundColor={alt}>
+		<Box
+			sx={{
+				backgroundColor: alt,
+			}}
+		>
 			<Container
 				maxWidth='xl'
 				sx={{
@@ -68,7 +73,9 @@ export const Header = () => {
 						</Typography>
 
 						<FlexBetween
-							backgroundColor={neutralLight}
+							sx={{
+								backgroundColor: neutralLight,
+							}}
 							borderRadius='9px'
 							gap='3rem'
 							padding='0.1rem 1.5rem'
@@ -94,9 +101,9 @@ export const Header = () => {
 						<Message sx={{ fontSize: '25px' }} />
 						<Notifications sx={{ fontSize: '25px' }} />
 						<Help sx={{ fontSize: '25px' }} />
-						<FormControl variant='standard' value={user.fullName}>
+						<FormControl>
 							<Select
-								value={user.fullName}
+								value={fullName}
 								sx={{
 									backgroundColor: neutralLight,
 									width: '150px',
@@ -112,8 +119,8 @@ export const Header = () => {
 								}}
 								input={<InputBase />}
 							>
-								<MenuItem value={user?.fullName}>
-									<Typography>{user?.fullName}</Typography>
+								<MenuItem value={fullName}>
+									<Typography>{fullName}</Typography>
 								</MenuItem>
 								<MenuItem onClick={onClickLogout}>Log Out</MenuItem>
 							</Select>

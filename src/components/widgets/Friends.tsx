@@ -5,7 +5,7 @@ import WidgetWrapper from '../WidgetWrapper'
 import { setFriends } from '../../state'
 import Friend from '../Friend'
 
-interface Friend {
+interface FriendType {
 	_id: string
 	fullName: string
 	avatarUrl: string
@@ -13,7 +13,7 @@ interface Friend {
 }
 
 interface Props {
-	userId: string
+	userId: string | undefined
 }
 
 const Friends: FC<Props> = ({ userId }) => {
@@ -49,7 +49,7 @@ const Friends: FC<Props> = ({ userId }) => {
 				Friend List
 			</Typography>
 			<Box display='flex' flexDirection='column' gap='1.5rem'>
-				{friends.map((friend: Friend) => (
+				{friends.map((friend: FriendType) => (
 					<Friend
 						key={friend._id}
 						friendId={friend._id}
