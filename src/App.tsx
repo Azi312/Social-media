@@ -12,11 +12,12 @@ import { Registration } from './pages/Registration'
 import { Header } from './components/Header'
 import UserProfile from './pages/UserProfile'
 import Users from './pages/Users'
+import { RootState } from './state'
 
 function App() {
-	const mode = useSelector((state: any) => state.mode)
+	const mode = useSelector((state: RootState) => state.mode)
 	const theme = useMemo(() => createTheme(themeSettings(mode)), [mode])
-	const isAuth = Boolean(useSelector((state: any) => state.token))
+	const isAuth = Boolean(useSelector((state: RootState) => state.token))
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />

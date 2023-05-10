@@ -5,6 +5,7 @@ import { PersonAddOutlined, PersonRemoveOutlined } from '@mui/icons-material'
 import { Avatar, Box, IconButton, Typography, useTheme } from '@mui/material'
 import { setFriends } from '../state'
 import FlexBetween from './FlexBetween'
+import { RootState } from '../state/types'
 
 interface Friend {
 	_id: string
@@ -13,17 +14,17 @@ interface Friend {
 	city: string
 }
 
-interface Props {
+interface FriendProps {
 	avatarUrl: string
 	fullName: string
 	city: string
 	friendId: string
 }
 
-const Friend: FC<Props> = ({ avatarUrl, fullName, city, friendId }) => {
-	const userId = useSelector((state: any) => state.user._id)
-	const token = useSelector((state: any) => state.token)
-	const friends = useSelector((state: any) => state.user.friends)
+const Friend: FC<FriendProps> = ({ avatarUrl, fullName, city, friendId }) => {
+	const userId = useSelector((state: RootState) => state.user._id)
+	const token = useSelector((state: RootState) => state.token)
+	const friends = useSelector((state: RootState) => state.user.friends)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
@@ -37,7 +38,7 @@ const Friend: FC<Props> = ({ avatarUrl, fullName, city, friendId }) => {
 
 	const patchFriend = async () => {
 		const response = await fetch(
-			`http://localhost:4444/users/${userId}/${friendId}`,
+			`${process.env.REACT_APP_API_URL}/users/${userId}/${friendId}`,
 			{
 				method: 'PATCH',
 				headers: {

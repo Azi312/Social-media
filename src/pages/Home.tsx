@@ -1,4 +1,3 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 import Grid from '@mui/material/Grid'
 
@@ -6,9 +5,10 @@ import MyPost from '../components/widgets/CreatePost'
 import Friends from '../components/widgets/Friends'
 import Posts from '../components/widgets/Posts'
 import User from '../components/widgets/User'
+import { RootState } from '../state/types'
 
 export const Home = () => {
-	const { _id, avatarUrl } = useSelector((state: any) => state.user)
+	const { _id, avatarUrl } = useSelector((state: RootState) => state.user)
 
 	return (
 		<>

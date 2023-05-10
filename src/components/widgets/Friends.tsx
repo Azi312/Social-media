@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Box, Typography, useTheme } from '@mui/material'
 import WidgetWrapper from '../WidgetWrapper'
 import { setFriends } from '../../state'
+import { RootState } from '../../state/types'
 import Friend from '../Friend'
 
 interface FriendType {
@@ -12,19 +13,19 @@ interface FriendType {
 	city: string
 }
 
-interface Props {
+interface FriendsProps {
 	userId: string | undefined
 }
 
-const Friends: FC<Props> = ({ userId }) => {
-	const token = useSelector((state: any) => state.token)
-	const friends = useSelector((state: any) => state.user.friends)
+const Friends: FC<FriendsProps> = ({ userId }) => {
+	const token = useSelector((state: RootState) => state.token)
+	const friends = useSelector((state: RootState) => state.user.friends)
 	const dispatch = useDispatch()
 	const { palette } = useTheme<any>()
 
 	const getFriends = async () => {
 		const response = await fetch(
-			`http://localhost:4444/users/${userId}/friends`,
+			`${process.env.REACT_APP_API_URL}/users/${userId}/friends`,
 			{
 				method: 'GET',
 				headers: { Authorization: `Bearer ${token}` },
@@ -49,7 +50,7 @@ const Friends: FC<Props> = ({ userId }) => {
 				Friend List
 			</Typography>
 			<Box display='flex' flexDirection='column' gap='1.5rem'>
-				{friends.map((friend: FriendType) => (
+				{friends.map(friend => (
 					<Friend
 						key={friend._id}
 						friendId={friend._id}

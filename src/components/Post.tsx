@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setPost } from '../state'
+import { RootState } from '../state/types'
 import {
 	ChatBubbleOutlineOutlined,
 	FavoriteBorderOutlined,
@@ -12,7 +13,7 @@ import FlexBetween from './FlexBetween'
 import Friend from './Friend'
 import WidgetWrapper from './WidgetWrapper'
 
-interface Props {
+interface PostProps {
 	postId: string
 	description: string
 	imageUrl: string
@@ -27,10 +28,16 @@ interface Props {
 	likes: string[]
 }
 
-const Post: FC<Props> = ({ postId, description, imageUrl, user, likes }) => {
+const Post: FC<PostProps> = ({
+	postId,
+	description,
+	imageUrl,
+	user,
+	likes,
+}) => {
 	const dispatch = useDispatch()
-	const token = useSelector((state: any) => state.token)
-	const loggedInUserId = useSelector((state: any) => state.user._id)
+	const token = useSelector((state: RootState) => state.token)
+	const loggedInUserId = useSelector((state: RootState) => state.user._id)
 	const isLiked = Boolean(likes[loggedInUserId])
 	const likeCount = Object.keys(likes).length
 
@@ -39,14 +46,17 @@ const Post: FC<Props> = ({ postId, description, imageUrl, user, likes }) => {
 	const primary = palette.primary.main
 
 	const patchLike = async () => {
-		const response = await fetch(`http://localhost:4444/posts/${postId}/like`, {
-			method: 'PATCH',
-			headers: {
-				Authorization: `Bearer ${token}`,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ userId: loggedInUserId }),
-		})
+		const response = await fetch(
+			`${process.env.REACT_APP_API_URL}/posts/${postId}/like`,
+			{
+				method: 'PATCH',
+				headers: {
+					Authorization: `Bearer ${token}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ userId: loggedInUserId }),
+			}
+		)
 		const updatedPost = await response.json()
 		dispatch(setPost({ post: updatedPost }))
 	}

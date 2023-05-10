@@ -7,6 +7,7 @@ import Friends from '../components/widgets/Friends'
 import { Box } from '@mui/material'
 import CreatePost from '../components/widgets/CreatePost'
 import Posts from '../components/widgets/Posts'
+import { RootState } from '../state/types'
 
 interface UserTypes {
 	_id: string
@@ -19,23 +20,26 @@ interface UserTypes {
 const UserProfile = () => {
 	const [user, setUser] = useState<UserTypes>()
 	const { userId } = useParams<any>()
-	const token = useSelector((state: any) => state.token)
-	const userLs = useSelector((state: any) => state.user)
+	const token = useSelector((state: RootState) => state.token)
+	const userLs = useSelector((state: RootState) => state.user)
 
 	const getUser = async () => {
-		const response = await fetch(`http://localhost:4444/users/${userId}`, {
-			method: 'GET',
-			headers: { Authorization: `Bearer ${token}` },
-		})
+		const response = await fetch(
+			`${process.env.REACT_APP_API_URL}/users/${userId}`,
+			{
+				method: 'GET',
+				headers: { Authorization: `Bearer ${token}` },
+			}
+		)
 		const data = await response.json()
 		setUser(data)
 	}
 
 	useEffect(() => {
 		getUser()
-	}, []) // eslint-disable-line react-hooks/exhaustive-deps
+	}, [])
 
-	// if (!user) return null
+	if (!user) return null
 
 	return (
 		<Grid container spacing={4}>

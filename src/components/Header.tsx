@@ -9,7 +9,6 @@ import {
 	Select,
 	MenuItem,
 	FormControl,
-	FormControlProps,
 	useTheme,
 	Container,
 } from '@mui/material'
@@ -22,11 +21,12 @@ import {
 	Help,
 } from '@mui/icons-material'
 import { setMode, setLogout, setSearch } from '../state'
+import { RootState } from '../state/types'
 import FlexBetween from './FlexBetween'
 
 export const Header: React.FC = () => {
-	const fullName = useSelector((state: any) => state.user.fullName)
-	const search = useSelector((state: any) => state.search)
+	const fullName = useSelector((state: RootState) => state.user.fullName)
+	const search = useSelector((state: RootState) => state.search)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 

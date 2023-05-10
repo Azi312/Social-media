@@ -76,16 +76,19 @@ export const Registration = () => {
 
 	const onSubmit = async (values: Values) => {
 		try {
-			const response = await fetch('http://localhost:4444/auth/register', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					...values,
-					avatarUrl,
-				}),
-			})
+			const response = await fetch(
+				`${process.env.REACT_APP_API_URL}/auth/register`,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						...values,
+						avatarUrl,
+					}),
+				}
+			)
 
 			const loggedIn = await response.json()
 			if (loggedIn) {

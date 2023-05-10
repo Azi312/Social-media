@@ -19,17 +19,13 @@ import {
 import FlexBetween from '../FlexBetween'
 import WidgetWrapper from '../WidgetWrapper'
 import { setPosts } from '../../state'
+import { RootState } from '../../state/types'
 
-interface FormFields {
-	description: string
-	imageUrl: string
-}
-
-interface MyPostProps {
+interface CreatePostProps {
 	avatarUrl?: string
 }
 
-const MyPost: React.FC<MyPostProps> = ({ avatarUrl }) => {
+const CreatePost: React.FC<CreatePostProps> = ({ avatarUrl }) => {
 	const dispatch = useDispatch()
 
 	const [isImage, setIsImage] = React.useState(false)
@@ -39,7 +35,7 @@ const MyPost: React.FC<MyPostProps> = ({ avatarUrl }) => {
 	const inputFileRef = React.useRef(null as any)
 
 	const { palette } = useTheme<any>()
-	const token = useSelector((state: any) => state.token)
+	const token = useSelector((state: RootState) => state.token)
 	const mediumMain = palette.neutral.mediumMain
 	const medium = palette.neutral.medium
 
@@ -76,7 +72,7 @@ const MyPost: React.FC<MyPostProps> = ({ avatarUrl }) => {
 				imageUrl,
 			}
 			console.log(token)
-			const response = await fetch('http://localhost:4444/posts', {
+			const response = await fetch(`${process.env.REACT_APP_API_URL}/posts`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -205,4 +201,4 @@ const MyPost: React.FC<MyPostProps> = ({ avatarUrl }) => {
 	)
 }
 
-export default MyPost
+export default CreatePost

@@ -12,6 +12,7 @@ import {
 import { Box, Typography, Divider, useTheme, Avatar } from '@mui/material'
 import FlexBetween from '../FlexBetween'
 import WidgetWrapper from '../WidgetWrapper'
+import { RootState } from '../../state/types'
 
 interface User {
 	_id: string
@@ -23,15 +24,15 @@ interface User {
 	friends: string[]
 }
 
-interface Props {
+interface UserProps {
 	userId?: string
 	avatarUrl?: string
 }
 
-const User: FC<Props> = ({ userId, avatarUrl }) => {
+const User: FC<UserProps> = ({ userId, avatarUrl }) => {
 	const [user, setUser] = useState<User>()
 	const navigate = useNavigate()
-	const token = useSelector((state: any) => state.token)
+	const token = useSelector((state: RootState) => state.token)
 
 	const { palette } = useTheme<any>()
 	const dark = palette.neutral.dark
@@ -39,10 +40,13 @@ const User: FC<Props> = ({ userId, avatarUrl }) => {
 	const main = palette.neutral.main
 
 	const getUser = async () => {
-		const response = await fetch(`http://localhost:4444/users/${userId}`, {
-			method: 'GET',
-			headers: { Authorization: `Bearer ${token}` },
-		})
+		const response = await fetch(
+			`${process.env.REACT_APP_API_URL}/users/${userId}`,
+			{
+				method: 'GET',
+				headers: { Authorization: `Bearer ${token}` },
+			}
+		)
 		const data = await response.json()
 		setUser(data)
 	}

@@ -2,6 +2,7 @@ import { FC, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPosts } from '../../state'
 import Post from '../Post'
+import { RootState } from '../../state/types'
 
 interface Post {
 	_id: string
@@ -18,27 +19,18 @@ interface Post {
 	likes: string[]
 }
 
-interface Props {
+interface PostsProps {
 	userId: string | undefined
 }
 
-const Posts: FC<Props> = ({ userId }) => {
+const Posts: FC<PostsProps> = ({ userId }) => {
 	const dispatch = useDispatch()
-	const posts = useSelector((state: any) => state.posts)
-	const token = useSelector((state: any) => state.token)
-
-	// const getPosts = async () => {
-	// 	const response = await fetch('http://localhost:4444/posts', {
-	// 		method: 'GET',
-	// 		headers: { Authorization: `Bearer ${token}` },
-	// 	})
-	// 	const data = await response.json()
-	// 	dispatch(setPosts({ posts: data }))
-	// }
+	const posts = useSelector((state: RootState) => state.posts)
+	const token = useSelector((state: RootState) => state.token)
 
 	const getUserPosts = async () => {
 		const response = await fetch(
-			`http://localhost:4444/posts/${userId}/posts`,
+			`${process.env.REACT_APP_API_URL}/posts/${userId}/posts`,
 			{
 				method: 'GET',
 				headers: { Authorization: `Bearer ${token}` },
@@ -54,7 +46,7 @@ const Posts: FC<Props> = ({ userId }) => {
 
 	return (
 		<>
-			{posts?.map(({ _id, user, description, imageUrl, likes }: Post) => (
+			{posts?.map(({ _id, user, description, imageUrl, likes }) => (
 				<Post
 					key={_id}
 					postId={_id}

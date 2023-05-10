@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Typography from '@mui/material/Typography'
@@ -34,13 +33,16 @@ export const Login = () => {
 	})
 
 	const onSubmit = async (values: Values) => {
-		const response = await fetch('http://localhost:4444/auth/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(values),
-		})
+		const response = await fetch(
+			`${process.env.REACT_APP_API_URL}/auth/login`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(values),
+			}
+		)
 
 		const loggedIn = await response.json()
 		if (loggedIn) {

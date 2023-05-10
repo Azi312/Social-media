@@ -3,18 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Box, Typography, useTheme } from '@mui/material'
 import Friend from '../components/Friend'
 import WidgetWrapper from '../components/WidgetWrapper'
-import { setFriends, setUsers } from '../state'
+import { setUsers } from '../state'
+import { RootState } from '../state/types'
 
 const Users = () => {
-	const token = useSelector((state: any) => state.token)
-	const users = useSelector((state: any) => state.users)
-	const search = useSelector((state: any) => state.search)
+	const token = useSelector((state: RootState) => state.token)
+	const users = useSelector((state: RootState) => state.users)
+	const search = useSelector((state: RootState) => state.search)
 	const dispatch = useDispatch()
 	const { palette } = useTheme<any>()
 
 	const getUsers = async () => {
 		const response = await fetch(
-			`http://localhost:4444/users?search=${search}`,
+			`${process.env.REACT_APP_API_URL}/users?search=${search}`,
 			{
 				method: 'GET',
 				headers: { Authorization: `Bearer ${token}` },
@@ -39,7 +40,7 @@ const Users = () => {
 				Friend List
 			</Typography>
 			<Box display='flex' flexDirection='column' gap='1.5rem'>
-				{users.map((user: any) => (
+				{users.map(user => (
 					<Friend
 						key={user._id}
 						friendId={user._id}
