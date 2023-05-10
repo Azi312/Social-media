@@ -6,9 +6,15 @@ import Friends from '../components/widgets/Friends'
 import Posts from '../components/widgets/Posts'
 import User from '../components/widgets/User'
 import { RootState } from '../state/types'
+import Users from './Users'
 
 export const Home = () => {
 	const { _id, avatarUrl } = useSelector((state: RootState) => state.user)
+	const search = useSelector((state: RootState) => state.search)
+
+	if (search.length > 0) {
+		return <Users />
+	}
 
 	return (
 		<>

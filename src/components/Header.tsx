@@ -21,11 +21,18 @@ import {
 	Help,
 } from '@mui/icons-material'
 import { setMode, setLogout, setSearch } from '../state'
-import { RootState } from '../state/types'
+// import { RootState } from '../state/types'
 import FlexBetween from './FlexBetween'
 
+interface RootState {
+	user: {
+		fullName?: string
+	}
+	search: string
+}
+
 export const Header: React.FC = () => {
-	const fullName = useSelector((state: RootState) => state.user.fullName)
+	const fullName = useSelector((state: RootState) => state?.user?.fullName)
 	const search = useSelector((state: RootState) => state.search)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
