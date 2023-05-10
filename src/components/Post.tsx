@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { setPost } from '../state'
 import {
 	ChatBubbleOutlineOutlined,
 	FavoriteBorderOutlined,
@@ -8,37 +9,56 @@ import {
 } from '@mui/icons-material'
 import { IconButton, Typography, useTheme } from '@mui/material'
 import FlexBetween from './FlexBetween'
-
 import Friend from './Friend'
 import WidgetWrapper from './WidgetWrapper'
-import { fetchLikePost, fetchUserPosts, setPosts } from '../redux/slices/posts'
 
-const Post = ({ postId, description, imageUrl, user, likes }) => {
-	const userData = useSelector(state => state.auth.data.userData)
+interface Props {
+	postId: string
+	description: string
+	imageUrl: string
+	user: {
+		_id: string
+		fullName: string
+		avatarUrl: string
+		age: string
+		city: string
+		university: string
+	}
+	likes: string[]
+}
+
+const Post: FC<Props> = ({ postId, description, imageUrl, user, likes }) => {
 	const dispatch = useDispatch()
-	const userId = userData._id
-
-	console.log('Likes:', likes, 'User ID:', userId)
-	const isLiked = likes && Boolean(likes[userId])
+	const token = useSelector((state: any) => state.token)
+	const loggedInUserId = useSelector((state: any) => state.user._id)
+	const isLiked = Boolean(likes[loggedInUserId])
 	const likeCount = Object.keys(likes).length
 
-	// console.log('Current user ID:', userId)
-	// console.log('Is liked:', isLiked)
-	// console.log(Object.keys(likes) == userId)
-
-	const { palette } = useTheme()
+	const { palette } = useTheme<any>()
 	const main = palette.neutral.main
 	const primary = palette.primary.main
 
 	const patchLike = async () => {
-		const userId = JSON.stringify(userData._id)
-		dispatch(fetchLikePost({ postId, userId }))
-		dispatch(fetchUserPosts({ userId: user._id }))
+		const response = await fetch(`http://localhost:4444/posts/${postId}/like`, {
+			method: 'PATCH',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ userId: loggedInUserId }),
+		})
+		const updatedPost = await response.json()
+		dispatch(setPost({ post: updatedPost }))
 	}
 
 	return (
 		<WidgetWrapper m='2rem 0'>
-			<Friend {...user} friendId={user._id} />
+			<Friend
+				fullName={user.fullName}
+				avatarUrl={user.avatarUrl}
+				city={user.city}
+				friendId={user._id}
+			/>
 			<Typography color={main} sx={{ mt: '1rem' }}>
 				{description}
 			</Typography>

@@ -1,5 +1,11 @@
+interface ColorTokens {
+	[color: string]: {
+		[shade: number]: string
+	}
+}
+
 // color design tokens export
-export const colorTokens = {
+export const colorTokens: ColorTokens = {
 	grey: {
 		0: '#FFFFFF',
 		10: '#F6F6F6',
@@ -29,9 +35,30 @@ export const colorTokens = {
 	},
 }
 
+interface Palette {
+	mode: any
+	primary: {
+		dark: string
+		main: string
+		light: string
+	}
+	neutral: {
+		dark: string
+		main: string
+		mediumMain: string
+		medium: string
+		light: string
+	}
+	background: {
+		default: string
+		alt: string
+	}
+}
+
 // mui theme settings
-export const themeSettings = mode => {
-	// const mode = 'dark'
+export const themeSettings = (
+	mode: string
+): { palette: Palette; typography: Record<string, any> } => {
 	return {
 		palette: {
 			mode: mode,

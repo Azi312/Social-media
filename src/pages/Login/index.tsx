@@ -1,6 +1,6 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Navigate, useNavigate, Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import Paper from '@mui/material/Paper'
@@ -8,14 +8,17 @@ import Button from '@mui/material/Button'
 
 import styles from './Login.module.scss'
 import { useForm } from 'react-hook-form'
-import { fetchAuth, selectAuth } from '../../redux/slices/auth'
-import { useAppDispatch } from '../../redux/store'
+import { setLogin } from '../../state'
 import { Box } from '@mui/material'
+
+interface Values {
+	email: string
+	password: string
+}
 
 export const Login = () => {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
-	const isAuth = useSelector(selectAuth)
 
 	const {
 		register,
@@ -30,29 +33,25 @@ export const Login = () => {
 		mode: 'onChange',
 	})
 
-	const onSubmit = async values => {
-		const data = await dispatch(fetchAuth(values))
+	const onSubmit = async (values: Values) => {
+		const response = await fetch('http://localhost:4444/auth/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(values),
+		})
 
-		if (!data.payload) {
-			alert('Wrong email or password')
+		const loggedIn = await response.json()
+		if (loggedIn) {
+			dispatch(
+				setLogin({
+					user: loggedIn.user,
+					token: loggedIn.token,
+				})
+			)
+			navigate('/home')
 		}
-
-		if ('token' in data.payload) {
-			const user = JSON.stringify({
-				id: data.payload._id,
-				fullName: data.payload.fullName,
-				city: data.payload.city,
-				friends: data.payload.friends,
-				avatarUrl: data.payload.avatarUrl,
-			})
-
-			window.localStorage.setItem('user', user)
-			window.localStorage.setItem('token', data.payload.token)
-		}
-	}
-
-	if (isAuth) {
-		return <Navigate to='/home' />
 	}
 
 	return (

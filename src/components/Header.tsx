@@ -20,27 +20,23 @@ import {
 	Notifications,
 	Help,
 } from '@mui/icons-material'
-import { setMode } from '../../redux/slices/mode'
-import FlexBetween from '../FlexBetween'
-import { logout } from '../../redux/slices/auth'
-import { getUserFromLS } from '../../utils/getUserFromLS'
+import { setMode, setLogout, setSearch } from '../state'
+import FlexBetween from './FlexBetween'
 
 export const Header = () => {
-	const userData = useSelector(state => state.auth.data)
+	const user = useSelector((state: any) => state.user)
+	const search = useSelector((state: any) => state.search)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
-	const user = getUserFromLS()
 
 	const onClickLogout = () => {
 		if (window.confirm('Have you really want to logout?')) {
-			dispatch(logout())
+			dispatch(setLogout())
 			navigate('/')
-			window.localStorage.removeItem('token')
-			window.localStorage.removeItem('user')
 		}
 	}
 
-	const theme = useTheme()
+	const theme = useTheme<any>()
 	const neutralLight = theme.palette.neutral.light
 	const dark = theme.palette.neutral.dark
 	const background = theme.palette.background.default
@@ -48,7 +44,12 @@ export const Header = () => {
 	const alt = theme.palette.background.alt
 	return (
 		<Box backgroundColor={alt}>
-			<Container maxWidth='lg'>
+			<Container
+				maxWidth='xl'
+				sx={{
+					maxWidth: '85%',
+				}}
+			>
 				<FlexBetween padding='1rem 0'>
 					<FlexBetween gap='1.75rem'>
 						<Typography
@@ -72,7 +73,11 @@ export const Header = () => {
 							gap='3rem'
 							padding='0.1rem 1.5rem'
 						>
-							<InputBase placeholder='Search...' />
+							<InputBase
+								value={search}
+								onChange={e => dispatch(setSearch(e.target.value))}
+								placeholder='Search...'
+							/>
 							<IconButton>
 								<Search />
 							</IconButton>
@@ -107,8 +112,8 @@ export const Header = () => {
 								}}
 								input={<InputBase />}
 							>
-								<MenuItem value={user.fullName}>
-									<Typography>{user.fullName}</Typography>
+								<MenuItem value={user?.fullName}>
+									<Typography>{user?.fullName}</Typography>
 								</MenuItem>
 								<MenuItem onClick={onClickLogout}>Log Out</MenuItem>
 							</Select>

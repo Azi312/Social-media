@@ -1,13 +1,10 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import React, { ChangeEvent, MouseEvent } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
-	EditOutlined,
-	DeleteOutlined,
 	AttachFileOutlined,
 	GifBoxOutlined,
 	ImageOutlined,
 	MicOutlined,
-	MoreHorizOutlined,
 } from '@mui/icons-material'
 import {
 	Box,
@@ -16,32 +13,37 @@ import {
 	InputBase,
 	useTheme,
 	Button,
-	IconButton,
-	useMediaQuery,
 	Avatar,
 } from '@mui/material'
-import Dropzone from 'react-dropzone'
 
-import FlexBetween from './FlexBetween'
-import WidgetWrapper from './WidgetWrapper'
-import axios from '../axios'
-import { fetchPosts, fetchUserPosts } from '../redux/slices/posts'
-import { getUserFromLS } from '../utils/getUserFromLS'
+import FlexBetween from '../FlexBetween'
+import WidgetWrapper from '../WidgetWrapper'
+import { setPosts } from '../../state'
 
-const MyPost = () => {
+interface FormFields {
+	description: string
+	imageUrl: string
+}
+
+interface MyPostProps {
+	avatarUrl?: string
+}
+
+const MyPost: React.FC<MyPostProps> = ({ avatarUrl }) => {
 	const dispatch = useDispatch()
+
 	const [isImage, setIsImage] = React.useState(false)
 	const [description, setDescription] = React.useState('')
-	const [isEditing, setIsEditing] = React.useState(false)
 	const [imageUrl, setImageUrl] = React.useState('')
-	const inputFileRef = React.useRef(null)
-	const user = getUserFromLS()
 
-	const { palette } = useTheme()
+	const inputFileRef = React.useRef(null as any)
+
+	const { palette } = useTheme<any>()
+	const token = useSelector((state: any) => state.token)
 	const mediumMain = palette.neutral.mediumMain
 	const medium = palette.neutral.medium
 
-	const handleChangeFile = async event => {
+	const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
 		try {
 			const file = event.target.files?.[0]
 			if (!file) {
@@ -49,9 +51,12 @@ const MyPost = () => {
 			}
 
 			const formData = new FormData()
-			// const file = event.target.files[0]
 			formData.append('image', file)
-			const { data } = await axios.post('/upload', formData)
+			const response = await fetch('/upload', {
+				method: 'POST',
+				body: formData,
+			})
+			const data = await response.json()
 			setImageUrl(data.url)
 		} catch (error) {
 			console.warn(error)
@@ -63,24 +68,28 @@ const MyPost = () => {
 		setImageUrl('')
 	}
 
-	const onSubmit = async event => {
+	const onSubmit = async (event: any) => {
 		event.preventDefault()
 		try {
 			const fields = {
 				description,
 				imageUrl,
 			}
+			console.log(token)
+			const response = await fetch('http://localhost:4444/posts', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(fields),
+			})
+			const posts = await response.json()
 
-			const { data } = isEditing
-				? await axios.patch(`/posts/`, fields)
-				: await axios.post('/posts', fields)
-			// const _id = isEditing ? id : data._id
-
-			// navigate(`/posts/${_id}`)
+			dispatch(setPosts({ posts }))
 			setIsImage(false)
 			setDescription('')
 			setImageUrl('')
-			dispatch(fetchUserPosts({ userId: user.id }))
 		} catch (error) {
 			console.warn(error)
 			alert('Error while creating post. Try again later.')
@@ -92,7 +101,7 @@ const MyPost = () => {
 			<FlexBetween gap='1.5rem'>
 				<Avatar
 					alt='/broken-image.jpg'
-					src='../assets/p1.jpeg'
+					src={avatarUrl}
 					sx={{ width: 60, height: 60 }}
 				/>
 				<InputBase
@@ -101,7 +110,7 @@ const MyPost = () => {
 					placeholder="What's on your mind..."
 					sx={{
 						width: '100%',
-						backgroundColor: palette.neutral.light,
+						backgroundColor: palette?.neutral?.light,
 						borderRadius: '2rem',
 						padding: '1rem 2rem',
 					}}
@@ -115,12 +124,7 @@ const MyPost = () => {
 					mt='1rem'
 					p='1rem'
 				>
-					<div
-					// acceptedFiles='.jpg,.jpeg,.png'
-					// multiple={false}
-					// onChange={handleChangeFile}
-					// onDrop={acceptedFiles => setImageUrl(acceptedFiles[0].name)}
-					>
+					<div>
 						<Button
 							onClick={() => inputFileRef.current.click()}
 							variant='outlined'
@@ -151,35 +155,6 @@ const MyPost = () => {
 								/>
 							</>
 						)}
-						{/* {({ getRootProps, getInputProps }) => (
-							<FlexBetween>
-								<Box
-									{...getRootProps()}
-									border={`2px dashed ${palette.primary.main}`}
-									p='1rem'
-									width='100%'
-									sx={{ '&:hover': { cursor: 'pointer' } }}
-								>
-									<input {...getInputProps()} />
-									{!imageUrl ? (
-										<p>Add Image Here</p>
-									) : (
-										<FlexBetween>
-											<Typography></Typography>
-											<EditOutlined />
-										</FlexBetween>
-									)}
-								</Box>
-								{imageUrl && (
-									<IconButton
-										onClick={() => setImageUrl(null)}
-										sx={{ width: '15%' }}
-									>
-										<DeleteOutlined />
-									</IconButton>
-								)}
-							</FlexBetween>
-						)} */}
 					</div>
 				</Box>
 			)}

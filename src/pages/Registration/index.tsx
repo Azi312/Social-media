@@ -1,8 +1,8 @@
 import React, { ChangeEvent } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { fetchRegister, selectAuth } from '../../redux/slices/auth'
+import { useDispatch } from 'react-redux'
+
 import { useForm } from 'react-hook-form'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
@@ -14,9 +14,17 @@ import Avatar from '@mui/material/Avatar'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import styles from './Login.module.scss'
-import axios from '../../axios'
-import { useAppDispatch } from '../../redux/store'
+import { setLogin } from '../../state'
 import { Box } from '@mui/material'
+
+interface Values {
+	fullName: string
+	age: string
+	city: string
+	university: string
+	email: string
+	password: string
+}
 
 export const Registration = () => {
 	const [avatarUrl, setAvatarUrl] = React.useState('')
@@ -24,8 +32,7 @@ export const Registration = () => {
 
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
-	const isAuth = useSelector(selectAuth)
-	const inputFileRef = React.useRef()
+	const inputFileRef = React.useRef(null as any)
 
 	const {
 		register,
@@ -45,7 +52,7 @@ export const Registration = () => {
 		mode: 'onChange',
 	})
 
-	const handleChangeFile = async event => {
+	const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
 		try {
 			const file = event.target.files?.[0]
 			if (!file) {
@@ -53,9 +60,13 @@ export const Registration = () => {
 			}
 
 			const formData = new FormData()
-			// const file = event.target.files[0]
 			formData.append('avatar', file)
-			const { data } = await axios.post('/upload-avatar', formData)
+			const response = await fetch('/upload-avatar', {
+				method: 'POST',
+				body: formData,
+			})
+			const data = await response.json()
+
 			setAvatarUrl(data.url)
 		} catch (error) {
 			console.warn(error)
@@ -63,33 +74,36 @@ export const Registration = () => {
 		}
 	}
 
-	const onSubmit = async values => {
-		const data = await dispatch(fetchRegister({ values, avatarUrl }))
-		if (!data.payload) {
-			alert('Wrong email or password')
-		}
-
-		if ('token' in data.payload) {
-			const user = JSON.stringify({
-				id: data.payload._id,
-				fullName: data.payload.fullName,
-				city: data.payload.city,
-				friends: data.payload.friends,
-				avatarUrl: data.payload.avatarUrl,
+	const onSubmit = async (values: Values) => {
+		try {
+			const response = await fetch('http://localhost:4444/auth/register', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					...values,
+					avatarUrl,
+				}),
 			})
 
-			window.localStorage.setItem('user', user)
-			window.localStorage.setItem('token', data.payload.token)
+			const loggedIn = await response.json()
+			if (loggedIn) {
+				dispatch(
+					setLogin({
+						user: loggedIn.user,
+						token: loggedIn.token,
+					})
+				)
+				navigate('/home')
+			}
+		} catch (error) {
+			console.error(error)
 		}
 	}
 
 	const removeAvatar = () => {
 		setAvatarUrl('')
-	}
-
-	console.log(avatarUrl)
-	if (isAuth) {
-		return <Navigate to='/home' />
 	}
 
 	return (

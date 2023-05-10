@@ -1,31 +1,66 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
 	ManageAccountsOutlined,
 	EditOutlined,
 	LocationOnOutlined,
-	WorkOutlineOutlined,
 	AccountBalance,
 	Group,
 } from '@mui/icons-material'
 import { Box, Typography, Divider, useTheme, Avatar } from '@mui/material'
-import FlexBetween from './FlexBetween'
-import WidgetWrapper from './WidgetWrapper'
+import FlexBetween from '../FlexBetween'
+import WidgetWrapper from '../WidgetWrapper'
 
-const User = ({ fullName, city, university, avatarUrl, age, friends }) => {
-	const { palette } = useTheme()
+interface User {
+	_id: string
+	fullName: string
+	avatarUrl: string
+	age: string
+	city: string
+	university: string
+	friends: string[]
+}
+
+interface Props {
+	userId: string
+	avatarUrl: string
+}
+
+const User: FC<Props> = ({ userId, avatarUrl }) => {
+	const [user, setUser] = useState<User>()
+	const navigate = useNavigate()
+	const token = useSelector((state: any) => state.token)
+
+	const { palette } = useTheme<any>()
 	const dark = palette.neutral.dark
 	const medium = palette.neutral.medium
 	const main = palette.neutral.main
+
+	const getUser = async () => {
+		const response = await fetch(`http://localhost:4444/users/${userId}`, {
+			method: 'GET',
+			headers: { Authorization: `Bearer ${token}` },
+		})
+		const data = await response.json()
+		setUser(data)
+	}
+
+	useEffect(() => {
+		getUser()
+	}, [])
+
+	if (!user) {
+		return null
+	}
 
 	return (
 		<WidgetWrapper>
 			<FlexBetween
 				gap='0.5rem'
 				pb='1.1rem'
-				// onClick={() => navigate(`/profile/${userId}`)}
+				onClick={() => navigate(`/profile/${userId}`)}
 			>
 				<FlexBetween gap='1rem'>
 					<Avatar src={avatarUrl} />
@@ -41,9 +76,9 @@ const User = ({ fullName, city, university, avatarUrl, age, friends }) => {
 								},
 							}}
 						>
-							{fullName}
+							{user.fullName}
 						</Typography>
-						<Typography color={medium}>{age} years old</Typography>
+						<Typography color={medium}>{user.age} years old</Typography>
 					</Box>
 				</FlexBetween>
 				<ManageAccountsOutlined />
@@ -51,25 +86,23 @@ const User = ({ fullName, city, university, avatarUrl, age, friends }) => {
 
 			<Divider />
 
-			{/* SECOND ROW */}
 			<Box p='1rem 0'>
 				<Box display='flex' alignItems='center' gap='1rem' mb='0.5rem'>
 					<LocationOnOutlined fontSize='large' sx={{ color: main }} />
-					<Typography color={medium}>{city}</Typography>
+					<Typography color={medium}>{user.city}</Typography>
 				</Box>
 				<Box display='flex' alignItems='center' gap='1rem'>
 					<AccountBalance fontSize='large' sx={{ color: main }} />
-					<Typography color={medium}>{university}</Typography>
+					<Typography color={medium}>{user.university}</Typography>
 				</Box>
 				<Box display='flex' alignItems='center' gap='1rem'>
 					<Group fontSize='large' sx={{ color: main }} />
 					<Typography color={medium}>
-						{friends.length} {friends.length > 1 ? 'friends' : 'friend'}
+						{user.friends.length}{' '}
+						{user.friends.length > 1 ? 'friends' : 'friend'}
 					</Typography>
 				</Box>
 			</Box>
-
-			{/* <Divider /> */}
 
 			<Divider />
 

@@ -1,27 +1,53 @@
+import { FC } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { PersonAddOutlined, PersonRemoveOutlined } from '@mui/icons-material'
 import { Avatar, Box, IconButton, Typography, useTheme } from '@mui/material'
-import { getUserFromLS } from '../utils/getUserFromLS'
-import { fetchAddFriend } from '../redux/slices/users'
+import { setFriends } from '../state'
 import FlexBetween from './FlexBetween'
 
-const Friend = ({ avatarUrl, fullName, city, friendId }) => {
-	const userData = useSelector(state => state.auth.data.userData)
+interface Friend {
+	_id: string
+	fullName: string
+	avatarUrl: string
+	city: string
+}
+
+interface Props {
+	avatarUrl: string
+	fullName: string
+	city: string
+	friendId: string
+}
+
+const Friend: FC<Props> = ({ avatarUrl, fullName, city, friendId }) => {
+	const userId = useSelector((state: any) => state.user._id)
+	const token = useSelector((state: any) => state.token)
+	const friends = useSelector((state: any) => state.user.friends)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
-	const user = getUserFromLS()
 
-	const { palette } = useTheme()
+	const { palette } = useTheme<any>()
 	const primaryLight = palette.primary.light
 	const primaryDark = palette.primary.dark
 	const main = palette.neutral.main
 	const medium = palette.neutral.medium
 
-	const isFriend = userData.friends.find(friend => friend === friendId)
+	const isFriend = friends.find((friend: Friend) => friend._id === friendId)
 
 	const patchFriend = async () => {
-		dispatch(fetchAddFriend({ userId: user.id, friendId }))
+		const response = await fetch(
+			`http://localhost:4444/users/${userId}/${friendId}`,
+			{
+				method: 'PATCH',
+				headers: {
+					Authorization: `Bearer ${token}`,
+					'Content-Type': 'application/json',
+				},
+			}
+		)
+		const data = await response.json()
+		dispatch(setFriends({ friends: data }))
 	}
 
 	return (
@@ -30,7 +56,7 @@ const Friend = ({ avatarUrl, fullName, city, friendId }) => {
 				<Avatar src={avatarUrl} />
 				<Box
 					onClick={() => {
-						navigate(`/userProfile/${friendId}`)
+						navigate(`/profile/${friendId}`)
 						navigate(0)
 					}}
 				>
@@ -52,7 +78,7 @@ const Friend = ({ avatarUrl, fullName, city, friendId }) => {
 					</Typography>
 				</Box>
 			</FlexBetween>
-			{user.id !== friendId && (
+			{userId !== friendId && (
 				<IconButton
 					onClick={patchFriend}
 					sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
