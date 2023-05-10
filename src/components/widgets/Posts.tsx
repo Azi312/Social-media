@@ -16,7 +16,7 @@ interface Post {
 	}
 	description: string
 	imageUrl: string
-	likes: string[]
+	likes: number[]
 }
 
 interface PostsProps {

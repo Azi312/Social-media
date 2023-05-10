@@ -12,7 +12,7 @@ import { Registration } from './pages/Registration'
 import { Header } from './components/Header'
 import UserProfile from './pages/UserProfile'
 import Users from './pages/Users'
-import { RootState } from './state'
+import { RootState } from './state/types'
 
 function App() {
 	const mode = useSelector((state: RootState) => state.mode)

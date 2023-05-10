@@ -21,7 +21,7 @@ export interface Post {
 	description: string
 	imageUrl: string
 	user: User
-	likes: string[]
+	likes: number[]
 }
 
 export interface InitialState {

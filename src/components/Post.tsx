@@ -13,6 +13,12 @@ import FlexBetween from './FlexBetween'
 import Friend from './Friend'
 import WidgetWrapper from './WidgetWrapper'
 
+interface LoggedInUserId {
+	user: {
+		_id: string
+	}
+}
+
 interface PostProps {
 	postId: string
 	description: string
@@ -25,7 +31,7 @@ interface PostProps {
 		city: string
 		university: string
 	}
-	likes: string[]
+	likes: number[]
 }
 
 const Post: FC<PostProps> = ({
@@ -37,7 +43,7 @@ const Post: FC<PostProps> = ({
 }) => {
 	const dispatch = useDispatch()
 	const token = useSelector((state: RootState) => state.token)
-	const loggedInUserId = useSelector((state: RootState) => state.user._id)
+	const loggedInUserId = useSelector((state: RootState | any) => state.user._id)
 	const isLiked = Boolean(likes[loggedInUserId])
 	const likeCount = Object.keys(likes).length
 
