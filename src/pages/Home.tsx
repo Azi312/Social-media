@@ -28,7 +28,8 @@ export const Home = () => {
 					<Friends userId={_id} />
 				</Grid>
 			</Grid>
-			{notice && <Notice />}
+			{/* {notice && <Notice />} */}
+			<Notice />
 		</>
 	)
 }

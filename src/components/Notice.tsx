@@ -2,14 +2,11 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setNotice } from '../state'
 import { Link } from 'react-router-dom'
-
-interface NoticeProps {
-	userId: string
-}
+import { RootState } from '../state/types'
 
 const Notice = () => {
 	const dispatch = useDispatch()
-	const { notice, user } = useSelector((state: any) => state)
+	const { notice, user } = useSelector((state: RootState) => state)
 
 	React.useEffect(() => {
 		dispatch(setNotice(true))

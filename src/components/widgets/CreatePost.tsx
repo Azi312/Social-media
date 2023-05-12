@@ -81,10 +81,10 @@ const CreatePost: React.FC<CreatePostProps> = ({ avatarUrl }) => {
 				body: JSON.stringify(fields),
 			})
 
-			dispatch(setNotice(true))
 			setIsImage(false)
 			setDescription('')
 			setImageUrl('')
+			dispatch(setNotice(true))
 		} catch (error) {
 			console.warn(error)
 			alert('Error while creating post. Try again later.')
