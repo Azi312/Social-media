@@ -50,11 +50,11 @@ const UserProfile = () => {
 			</Grid>
 			<Grid xs={8} item>
 				{userId === userLs._id ? (
-					<CreatePost avatarUrl={undefined} />
+					<CreatePost avatarUrl={user?.avatarUrl} />
 				) : (
 					<h1>{user?.fullName}'s posts</h1>
 				)}
-				<Posts userId={userId} />
+				<Posts userId={userId} isProfile />
 			</Grid>
 		</Grid>
 	)

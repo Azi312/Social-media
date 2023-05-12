@@ -26,7 +26,9 @@ const Users = () => {
 	}
 
 	useEffect(() => {
-		getUsers()
+		if (search.length > 0) {
+			getUsers()
+		}
 	}, [search])
 
 	return (

@@ -18,6 +18,13 @@ function App() {
 	const mode = useSelector((state: RootState) => state.mode)
 	const theme = useMemo(() => createTheme(themeSettings(mode)), [mode])
 	const isAuth = Boolean(useSelector((state: RootState) => state.token))
+
+	const search = useSelector((state: RootState) => state.search)
+
+	// if (search.length > 0) {
+	// 	return <Users />
+	// }
+
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
@@ -30,6 +37,7 @@ function App() {
 					}}
 				>
 					<Routes>
+						{search.length > 0}
 						<Route
 							path='/home'
 							element={isAuth ? <Home /> : <Navigate to='/' />}
