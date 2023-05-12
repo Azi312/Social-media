@@ -31,6 +31,7 @@ export interface InitialState {
 	posts: Post[]
 	users: User[]
 	search: string
+	notice: boolean
 }
 
 export interface RootState {
@@ -38,6 +39,7 @@ export interface RootState {
 	token: string
 	user: User
 	users: User[]
-	search: string
 	posts: Post[]
+	search: string
+	notice: boolean
 }

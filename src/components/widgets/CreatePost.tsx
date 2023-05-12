@@ -18,7 +18,7 @@ import {
 
 import FlexBetween from '../FlexBetween'
 import WidgetWrapper from '../WidgetWrapper'
-import { setPosts } from '../../state'
+import { setNotice } from '../../state'
 import { RootState } from '../../state/types'
 
 interface CreatePostProps {
@@ -48,7 +48,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ avatarUrl }) => {
 
 			const formData = new FormData()
 			formData.append('image', file)
-			const response = await fetch('/upload', {
+			const response = await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
 				method: 'POST',
 				body: formData,
 			})
@@ -80,9 +80,8 @@ const CreatePost: React.FC<CreatePostProps> = ({ avatarUrl }) => {
 				},
 				body: JSON.stringify(fields),
 			})
-			const posts = await response.json()
 
-			dispatch(setPosts({ posts }))
+			dispatch(setNotice(true))
 			setIsImage(false)
 			setDescription('')
 			setImageUrl('')

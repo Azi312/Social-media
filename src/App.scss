@@ -4,3 +4,40 @@
 	gap: 30px;
 	font-family: 'Roboto', sans-serif;
 }
+
+.notification {
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	width: 300px;
+	height: 80px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	display: flex;
+	// justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	color: #000;
+	.body {
+		padding: 10px 15px;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		& > * {
+			margin: 0;
+			padding: 0;
+		}
+		h3 {
+			font-size: 16px;
+		}
+		p {
+			font-size: 14px;
+			span {
+				color: #344ddc;
+				font-weight: bold;
+				cursor: pointer;
+			}
+		}
+	}
+}

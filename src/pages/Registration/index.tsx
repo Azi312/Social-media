@@ -61,10 +61,13 @@ export const Registration = () => {
 
 			const formData = new FormData()
 			formData.append('avatar', file)
-			const response = await fetch('/upload-avatar', {
-				method: 'POST',
-				body: formData,
-			})
+			const response = await fetch(
+				`${process.env.REACT_APP_API_URL}/upload-avatar`,
+				{
+					method: 'POST',
+					body: formData,
+				}
+			)
 			const data = await response.json()
 
 			setAvatarUrl(data.url)

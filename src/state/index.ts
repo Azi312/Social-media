@@ -8,6 +8,7 @@ const initialState: InitialState = {
 	posts: [],
 	users: [],
 	search: '',
+	notice: false,
 }
 
 export const authSlice = createSlice({
@@ -49,6 +50,9 @@ export const authSlice = createSlice({
 		setSearch: (state, action) => {
 			state.search = action.payload
 		},
+		setNotice: (state, action) => {
+			state.notice = action.payload
+		},
 	},
 })
 
@@ -61,5 +65,6 @@ export const {
 	setPost,
 	setUsers,
 	setSearch,
+	setNotice,
 } = authSlice.actions
 export default authSlice.reducer

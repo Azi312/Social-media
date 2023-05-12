@@ -6,11 +6,13 @@ import Friends from '../components/widgets/Friends'
 import Posts from '../components/widgets/Posts'
 import User from '../components/widgets/User'
 import { RootState } from '../state/types'
+import Notice from '../components/Notice'
 
 export const Home = () => {
 	const { _id, avatarUrl, friends } = useSelector(
 		(state: RootState) => state.user
 	)
+	const notice = useSelector((state: RootState) => state.notice)
 
 	return (
 		<>
@@ -26,6 +28,7 @@ export const Home = () => {
 					<Friends userId={_id} />
 				</Grid>
 			</Grid>
+			{notice && <Notice />}
 		</>
 	)
 }

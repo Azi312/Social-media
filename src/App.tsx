@@ -21,10 +21,6 @@ function App() {
 
 	const search = useSelector((state: RootState) => state.search)
 
-	// if (search.length > 0) {
-	// 	return <Users />
-	// }
-
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
