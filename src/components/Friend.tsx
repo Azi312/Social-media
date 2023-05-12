@@ -37,7 +37,6 @@ const Friend: FC<FriendProps> = ({ avatarUrl, fullName, city, friendId }) => {
 	const isFriend = friends.find(
 		(friend: Friend) => friend._id === friendId || friend._id === userId
 	)
-	console.log(friendId, isFriend, friends)
 
 	const patchFriend = async () => {
 		const response = await fetch(

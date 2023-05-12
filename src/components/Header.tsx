@@ -50,6 +50,7 @@ export const Header: React.FC = () => {
 	const background = theme.palette.background.default
 	const primaryLight = theme.palette.primary.light
 	const alt = theme.palette.background.alt
+
 	return (
 		<Box
 			sx={{
@@ -90,6 +91,7 @@ export const Header: React.FC = () => {
 							<InputBase
 								value={search}
 								onChange={e => dispatch(setSearch(e.target.value))}
+								onFocus={() => navigate(`/users`)}
 								placeholder='Search...'
 							/>
 							<IconButton>
