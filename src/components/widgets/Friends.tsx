@@ -20,6 +20,7 @@ interface FriendsProps {
 const Friends: FC<FriendsProps> = ({ userId }) => {
 	const token = useSelector((state: RootState) => state.token)
 	const friends = useSelector((state: RootState) => state.user.friends)
+	const ownerId = useSelector((state: RootState) => state.user._id)
 	const dispatch = useDispatch()
 	const { palette } = useTheme<any>()
 

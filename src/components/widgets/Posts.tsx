@@ -24,15 +24,16 @@ interface PostsProps {
 	userId: string | undefined
 	friends?: any
 	isProfile?: boolean
+	pId?: string | undefined
 }
 
-const Posts: FC<PostsProps> = ({ userId, friends, isProfile }) => {
+const Posts: FC<PostsProps> = ({ userId, friends, isProfile = false, pId }) => {
 	const dispatch = useDispatch()
 	const posts = useSelector((state: RootState) => state.posts)
 	const token = useSelector((state: RootState) => state.token)
 	// const [isProfile, setIsProfile] = useState(false)
 
-	const userFriendsId = friends.map((friend: Friend) => friend._id)
+	const userFriendsId = friends?.map((friend: Friend) => friend._id)
 
 	const getPosts = async () => {
 		const response = await fetch(`${process.env.REACT_APP_API_URL}/posts`, {
@@ -69,7 +70,7 @@ const Posts: FC<PostsProps> = ({ userId, friends, isProfile }) => {
 
 	return (
 		<>
-			{friends.length > 0
+			{friends?.length > 0 && !isProfile
 				? posts
 						?.filter(post => userFriendsId.includes(post.user._id))
 						.map(({ _id, user, description, imageUrl, likes }) => (

@@ -34,7 +34,10 @@ const Friend: FC<FriendProps> = ({ avatarUrl, fullName, city, friendId }) => {
 	const main = palette.neutral.main
 	const medium = palette.neutral.medium
 
-	const isFriend = friends.find((friend: Friend) => friend._id === friendId)
+	const isFriend = friends.find(
+		(friend: Friend) => friend._id === friendId || friend._id === userId
+	)
+	console.log(friendId, isFriend, friends)
 
 	const patchFriend = async () => {
 		const response = await fetch(
