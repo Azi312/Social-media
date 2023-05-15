@@ -31,8 +31,8 @@ interface UserProps {
 
 const User: FC<UserProps> = ({ userId, avatarUrl }) => {
 	const [user, setUser] = useState<User>()
-	const navigate = useNavigate()
 	const token = useSelector((state: RootState) => state.token)
+	const navigate = useNavigate()
 
 	const { palette } = useTheme<any>()
 	const dark = palette.neutral.dark

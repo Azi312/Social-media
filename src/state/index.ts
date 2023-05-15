@@ -24,6 +24,7 @@ export const authSlice = createSlice({
 		},
 		setLogout: state => {
 			state.posts = []
+			state.users = []
 			state.user = null
 			state.token = null
 		},
@@ -34,6 +35,7 @@ export const authSlice = createSlice({
 				console.error('user friends non-existent :(')
 			}
 		},
+
 		setPosts: (state, action) => {
 			state.posts = action.payload.posts
 		},
@@ -44,6 +46,7 @@ export const authSlice = createSlice({
 			})
 			state.posts = updatedPosts
 		},
+
 		setUsers: (state, action) => {
 			state.users = action.payload.users
 		},

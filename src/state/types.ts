@@ -10,10 +10,20 @@ export interface User {
 	fullName: string
 	age: string
 	avatarUrl: string
+	coverPicture: string
 	city: string
 	university: string
 	email: string
 	friends: Friend[]
+}
+
+export interface Comment {
+	user: {
+		id: string
+		fullName: string
+		avatarUrl: string
+	}
+	text: string
 }
 
 export interface Post {
@@ -22,6 +32,8 @@ export interface Post {
 	imageUrl: string
 	user: User
 	likes: number[]
+	comments: Comment[]
+	createdAt: string
 }
 
 export interface InitialState {

@@ -19,9 +19,9 @@ interface UserTypes {
 
 const UserProfile = () => {
 	const [user, setUser] = useState<UserTypes>()
-	const { userId } = useParams<any>()
+	const { userId } = useParams<string>()
 	const token = useSelector((state: RootState) => state.token)
-	const userLs = useSelector((state: RootState) => state.user)
+	const avatarUrl = useSelector((state: RootState) => state.user.avatarUrl)
 
 	const getUser = async () => {
 		const response = await fetch(
@@ -49,11 +49,7 @@ const UserProfile = () => {
 				<Friends userId={userId} />
 			</Grid>
 			<Grid xs={8} item>
-				{userId === userLs._id ? (
-					<CreatePost avatarUrl={user?.avatarUrl} />
-				) : (
-					<h1>{user?.fullName}'s posts</h1>
-				)}
+				<CreatePost avatarUrl={avatarUrl} />
 				<Posts userId={userId} isProfile />
 			</Grid>
 		</Grid>

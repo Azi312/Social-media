@@ -1,4 +1,4 @@
-import React, { ChangeEvent, MouseEvent } from 'react'
+import React, { ChangeEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
 	AttachFileOutlined,
@@ -18,7 +18,7 @@ import {
 
 import FlexBetween from '../FlexBetween'
 import WidgetWrapper from '../WidgetWrapper'
-import { setNotice } from '../../state'
+import { setNotice, setPosts } from '../../state'
 import { RootState } from '../../state/types'
 
 interface CreatePostProps {
@@ -71,7 +71,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ avatarUrl }) => {
 				description,
 				imageUrl,
 			}
-			console.log(token)
+
 			const response = await fetch(`${process.env.REACT_APP_API_URL}/posts`, {
 				method: 'POST',
 				headers: {
@@ -80,6 +80,9 @@ const CreatePost: React.FC<CreatePostProps> = ({ avatarUrl }) => {
 				},
 				body: JSON.stringify(fields),
 			})
+
+			const data = await response.json()
+			dispatch(setPosts({ posts: data }))
 
 			setIsImage(false)
 			setDescription('')

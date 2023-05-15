@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPosts } from '../../state'
-import Post from '../Post'
+import Post from './Post'
 import { RootState } from '../../state/types'
 import Friend from '../Friend'
 
@@ -18,20 +18,20 @@ interface Post {
 	description: string
 	imageUrl: string
 	likes: number[]
+	comments: any
+	createdAt: string
 }
 
 interface PostsProps {
 	userId: string | undefined
 	friends?: any
 	isProfile?: boolean
-	pId?: string | undefined
 }
 
-const Posts: FC<PostsProps> = ({ userId, friends, isProfile = false, pId }) => {
+const Posts: FC<PostsProps> = ({ userId, friends, isProfile = false }) => {
 	const dispatch = useDispatch()
 	const posts = useSelector((state: RootState) => state.posts)
 	const token = useSelector((state: RootState) => state.token)
-	// const [isProfile, setIsProfile] = useState(false)
 
 	const userFriendsId = friends?.map((friend: Friend) => friend._id)
 
@@ -41,10 +41,11 @@ const Posts: FC<PostsProps> = ({ userId, friends, isProfile = false, pId }) => {
 			headers: { Authorization: `Bearer ${token}` },
 		})
 
-		const data = await response.json()
+		const posts = await response.json()
 
-		dispatch(setPosts({ posts: data }))
+		dispatch(setPosts({ posts }))
 	}
+
 	const getUserPosts = async () => {
 		const response = await fetch(
 			`${process.env.REACT_APP_API_URL}/posts/${userId}/posts`,
@@ -54,10 +55,9 @@ const Posts: FC<PostsProps> = ({ userId, friends, isProfile = false, pId }) => {
 			}
 		)
 
-		const data = await response.json()
-		console.log(data)
+		const posts = await response.json()
 
-		dispatch(setPosts({ posts: data }))
+		dispatch(setPosts({ posts }))
 	}
 
 	useEffect(() => {
@@ -66,14 +66,45 @@ const Posts: FC<PostsProps> = ({ userId, friends, isProfile = false, pId }) => {
 		} else {
 			getPosts()
 		}
-	}, [])
+	}, [posts.length])
 
 	return (
 		<>
 			{friends?.length > 0 && !isProfile
 				? posts
 						?.filter(post => userFriendsId.includes(post.user._id))
-						.map(({ _id, user, description, imageUrl, likes }) => (
+						.map(
+							({
+								_id,
+								user,
+								description,
+								imageUrl,
+								likes,
+								comments,
+								createdAt,
+							}) => (
+								<Post
+									key={_id}
+									postId={_id}
+									user={user}
+									description={description}
+									imageUrl={imageUrl}
+									likes={likes}
+									comments={comments}
+									createdAt={createdAt}
+								/>
+							)
+						)
+				: posts.map(
+						({
+							_id,
+							user,
+							description,
+							imageUrl,
+							likes,
+							comments,
+							createdAt,
+						}) => (
 							<Post
 								key={_id}
 								postId={_id}
@@ -81,18 +112,11 @@ const Posts: FC<PostsProps> = ({ userId, friends, isProfile = false, pId }) => {
 								description={description}
 								imageUrl={imageUrl}
 								likes={likes}
+								comments={comments}
+								createdAt={createdAt}
 							/>
-						))
-				: posts?.map(({ _id, user, description, imageUrl, likes }) => (
-						<Post
-							key={_id}
-							postId={_id}
-							user={user}
-							description={description}
-							imageUrl={imageUrl}
-							likes={likes}
-						/>
-				  ))}
+						)
+				  )}
 		</>
 	)
 }

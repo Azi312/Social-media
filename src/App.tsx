@@ -1,7 +1,7 @@
 import './App.scss'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import Container from '@mui/material/Container'
 import { createTheme } from '@mui/material/styles'
@@ -20,32 +20,34 @@ function App() {
 	const isAuth = Boolean(useSelector((state: RootState) => state.token))
 
 	return (
-		<ThemeProvider theme={theme}>
-			<CssBaseline />
-			<div className='App'>
-				<Header />
-				<Container
-					maxWidth='xl'
-					sx={{
-						maxWidth: '85%',
-					}}
-				>
-					<Routes>
-						<Route
-							path='/home'
-							element={isAuth ? <Home /> : <Navigate to='/' />}
-						/>
-						<Route
-							path='/users'
-							element={isAuth ? <Users /> : <Navigate to='/' />}
-						/>
-						<Route path='/profile/:userId' element={<UserProfile />} />
-						<Route path='/' element={<Login />} />
-						<Route path='/register' element={<Registration />} />
-					</Routes>
-				</Container>
-			</div>
-		</ThemeProvider>
+		<div className='App'>
+			<BrowserRouter>
+				<ThemeProvider theme={theme}>
+					<CssBaseline />
+					<Header />
+					<Container
+						maxWidth='xl'
+						sx={{
+							maxWidth: '85%',
+						}}
+					>
+						<Routes>
+							<Route
+								path='/home'
+								element={isAuth ? <Home /> : <Navigate to='/' />}
+							/>
+							<Route
+								path='/users'
+								element={isAuth ? <Users /> : <Navigate to='/' />}
+							/>
+							<Route path='/profile/:userId' element={<UserProfile />} />
+							<Route path='/' element={<Login />} />
+							<Route path='/register' element={<Registration />} />
+						</Routes>
+					</Container>
+				</ThemeProvider>
+			</BrowserRouter>
+		</div>
 	)
 }
 

@@ -2,7 +2,7 @@
 	width: 500px;
 	padding: 30px 50px;
 	border: 1px solid #dedede;
-	margin: 0 auto 30px;
+	margin: 50px auto 30px;
 }
 
 .field {
@@ -19,4 +19,10 @@
 	display: flex;
 	justify-content: center;
 	margin-bottom: 30px;
+}
+
+form {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
 }

@@ -1,6 +1,5 @@
 import React, { ChangeEvent } from 'react'
 import { useDispatch } from 'react-redux'
-
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
@@ -12,10 +11,10 @@ import IconButton from '@mui/material/IconButton'
 import PhotoCamera from '@mui/icons-material/PhotoCamera'
 import Avatar from '@mui/material/Avatar'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { Box } from '@mui/material'
 
 import styles from './Login.module.scss'
 import { setLogin } from '../../state'
-import { Box } from '@mui/material'
 
 interface Values {
 	fullName: string
@@ -175,6 +174,7 @@ export const Registration = () => {
 					className={styles.field}
 					label='Full name'
 					fullWidth
+					sx={{ flex: '0 0 47%' }}
 				/>
 				<TextField
 					{...register('age', { required: 'Enter your age' })}
@@ -183,6 +183,7 @@ export const Registration = () => {
 					className={styles.field}
 					label='Age'
 					fullWidth
+					sx={{ flex: '0 0 47%' }}
 				/>
 				<TextField
 					{...register('city', { required: 'Enter your city' })}
@@ -190,7 +191,8 @@ export const Registration = () => {
 					helperText={errors.city?.message}
 					className={styles.field}
 					label='City'
-					fullWidth
+					// fullWidth
+					sx={{ flex: '0 0 47%' }}
 				/>
 				<TextField
 					{...register('university', { required: 'Enter your university' })}
@@ -199,6 +201,7 @@ export const Registration = () => {
 					className={styles.field}
 					label='University'
 					fullWidth
+					sx={{ flex: '0 0 47%' }}
 				/>
 				<TextField
 					className={styles.field}

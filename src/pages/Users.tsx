@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Navigate } from 'react-router-dom'
 import { Box, Typography, useTheme } from '@mui/material'
 import Friend from '../components/Friend'
 import WidgetWrapper from '../components/WidgetWrapper'

@@ -1,7 +1,5 @@
 import React, { FC } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setPost } from '../state'
-import { RootState } from '../state/types'
 import {
 	ChatBubbleOutlineOutlined,
 	FavoriteBorderOutlined,
@@ -9,15 +7,13 @@ import {
 	ShareOutlined,
 } from '@mui/icons-material'
 import { IconButton, Typography, useTheme } from '@mui/material'
-import FlexBetween from './FlexBetween'
-import Friend from './Friend'
-import WidgetWrapper from './WidgetWrapper'
+import { setPost } from '../../state'
+import { RootState } from '../../state/types'
 
-interface LoggedInUserId {
-	user: {
-		_id: string
-	}
-}
+import FlexBetween from '../FlexBetween'
+import Friend from '../Friend'
+import WidgetWrapper from '../WidgetWrapper'
+import Comments from '../Comments'
 
 interface PostProps {
 	postId: string
@@ -32,6 +28,8 @@ interface PostProps {
 		university: string
 	}
 	likes: number[]
+	comments: any
+	createdAt: string
 }
 
 const Post: FC<PostProps> = ({
@@ -40,7 +38,11 @@ const Post: FC<PostProps> = ({
 	imageUrl,
 	user,
 	likes,
+	comments,
+	createdAt,
 }) => {
+	const [commentOpen, setCommentOpen] = React.useState(false)
+
 	const dispatch = useDispatch()
 	const token = useSelector((state: RootState) => state.token)
 	const loggedInUserId = useSelector((state: RootState | any) => state.user._id)
@@ -70,10 +72,12 @@ const Post: FC<PostProps> = ({
 	return (
 		<WidgetWrapper m='2rem 0'>
 			<Friend
+				postId={postId}
 				fullName={user.fullName}
 				avatarUrl={user.avatarUrl}
 				city={user.city}
 				friendId={user._id}
+				createdAt={createdAt}
 			/>
 			<Typography color={main} sx={{ mt: '1rem' }}>
 				{description}
@@ -101,10 +105,10 @@ const Post: FC<PostProps> = ({
 					</FlexBetween>
 
 					<FlexBetween gap='0.3rem'>
-						<IconButton>
+						<IconButton onClick={() => setCommentOpen(prev => !prev)}>
 							<ChatBubbleOutlineOutlined />
 						</IconButton>
-						<Typography>5</Typography>
+						<Typography>{comments.length}</Typography>
 					</FlexBetween>
 				</FlexBetween>
 
@@ -112,6 +116,14 @@ const Post: FC<PostProps> = ({
 					<ShareOutlined />
 				</IconButton>
 			</FlexBetween>
+
+			{commentOpen && (
+				<Comments
+					comments={comments}
+					avatarUrl={user.avatarUrl}
+					postId={postId}
+				/>
+			)}
 		</WidgetWrapper>
 	)
 }

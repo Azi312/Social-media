@@ -21,7 +21,6 @@ import {
 	Help,
 } from '@mui/icons-material'
 import { setMode, setLogout, setSearch } from '../state'
-// import { RootState } from '../state/types'
 import FlexBetween from './FlexBetween'
 
 interface RootState {
@@ -50,6 +49,12 @@ export const Header: React.FC = () => {
 	const background = theme.palette.background.default
 	const primaryLight = theme.palette.primary.light
 	const alt = theme.palette.background.alt
+
+	if (
+		window.location.pathname === '/' ||
+		window.location.pathname === '/register'
+	)
+		return null
 
 	return (
 		<Box
@@ -115,11 +120,10 @@ export const Header: React.FC = () => {
 								value={fullName}
 								sx={{
 									backgroundColor: neutralLight,
-									width: '150px',
+									width: '160px',
 									borderRadius: '0.25rem',
 									p: '0.25rem 1rem',
 									'& .MuiSvgIcon-root': {
-										pr: '0.25rem',
 										width: '3rem',
 									},
 									'& .MuiSelect-select:focus': {

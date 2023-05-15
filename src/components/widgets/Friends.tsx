@@ -6,13 +6,6 @@ import { setFriends } from '../../state'
 import { RootState } from '../../state/types'
 import Friend from '../Friend'
 
-interface FriendType {
-	_id: string
-	fullName: string
-	avatarUrl: string
-	city: string
-}
-
 interface FriendsProps {
 	userId: string | undefined
 }
@@ -20,7 +13,6 @@ interface FriendsProps {
 const Friends: FC<FriendsProps> = ({ userId }) => {
 	const token = useSelector((state: RootState) => state.token)
 	const friends = useSelector((state: RootState) => state.user.friends)
-	const ownerId = useSelector((state: RootState) => state.user._id)
 	const dispatch = useDispatch()
 	const { palette } = useTheme<any>()
 
