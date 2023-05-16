@@ -3,6 +3,11 @@
 	padding: 30px 50px;
 	border: 1px solid #dedede;
 	margin: 50px auto 30px;
+
+	@media (max-width: 768px) {
+		width: 100%;
+		padding: 30px 20px;
+	}
 }
 
 .field {
@@ -25,4 +30,8 @@ form {
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
+
+	@media (max-width: 768px) {
+		flex-direction: column;
+	}
 }
