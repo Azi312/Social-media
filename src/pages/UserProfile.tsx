@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import Grid from '@mui/material/Grid'
 import User from '../components/widgets/User'
 import Friends from '../components/widgets/Friends'
-import { Box } from '@mui/material'
+import { Box, useMediaQuery } from '@mui/material'
 import CreatePost from '../components/widgets/CreatePost'
 import Posts from '../components/widgets/Posts'
 import { RootState } from '../state/types'
+import { Navbar } from '../components/Navbar'
 
 interface UserTypes {
 	_id: string
@@ -22,6 +22,7 @@ const UserProfile = () => {
 	const { userId } = useParams<string>()
 	const token = useSelector((state: RootState) => state.token)
 	const avatarUrl = useSelector((state: RootState) => state.user.avatarUrl)
+	const isNonMobileScreens = useMediaQuery('(min-width:1000px)')
 
 	const getUser = async () => {
 		const response = await fetch(
@@ -42,17 +43,30 @@ const UserProfile = () => {
 	if (!user) return null
 
 	return (
-		<Grid container spacing={4}>
-			<Grid xs={4} item>
-				<User userId={userId} avatarUrl={user?.avatarUrl} />
-				<Box m='2rem 0' />
-				<Friends userId={userId} />
-			</Grid>
-			<Grid xs={8} item>
-				<CreatePost avatarUrl={avatarUrl} />
-				<Posts userId={userId} isProfile />
-			</Grid>
-		</Grid>
+		<Box>
+			<Navbar />
+			<Box
+				width='100%'
+				padding='2rem 6%'
+				display={isNonMobileScreens ? 'flex' : 'block'}
+				gap='2rem'
+				justifyContent='center'
+			>
+				<Box flexBasis={isNonMobileScreens ? '26%' : undefined}>
+					<User userId={userId} avatarUrl={user?.avatarUrl} />
+					<Box m='2rem 0' />
+					<Friends userId={userId} />
+				</Box>
+				<Box
+					flexBasis={isNonMobileScreens ? '42%' : undefined}
+					mt={isNonMobileScreens ? undefined : '2rem'}
+				>
+					<CreatePost avatarUrl={avatarUrl} />
+					<Box m='2rem 0' />
+					<Posts userId={userId} isProfile />
+				</Box>
+			</Box>
+		</Box>
 	)
 }
 

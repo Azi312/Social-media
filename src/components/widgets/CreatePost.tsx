@@ -5,6 +5,7 @@ import {
 	GifBoxOutlined,
 	ImageOutlined,
 	MicOutlined,
+	MoreHorizOutlined,
 } from '@mui/icons-material'
 import {
 	Box,
@@ -14,6 +15,7 @@ import {
 	useTheme,
 	Button,
 	Avatar,
+	useMediaQuery,
 } from '@mui/material'
 
 import FlexBetween from '../FlexBetween'
@@ -27,7 +29,7 @@ interface CreatePostProps {
 
 const CreatePost: React.FC<CreatePostProps> = ({ avatarUrl }) => {
 	const dispatch = useDispatch()
-
+	const isNonMobileScreens = useMediaQuery('(min-width: 1000px)')
 	const [isImage, setIsImage] = React.useState(false)
 	const [description, setDescription] = React.useState('')
 	const [imageUrl, setImageUrl] = React.useState('')
@@ -170,22 +172,28 @@ const CreatePost: React.FC<CreatePostProps> = ({ avatarUrl }) => {
 					</Typography>
 				</FlexBetween>
 
-				<>
-					<FlexBetween gap='0.25rem'>
-						<GifBoxOutlined sx={{ color: mediumMain }} />
-						<Typography color={mediumMain}>Clip</Typography>
-					</FlexBetween>
+				{isNonMobileScreens ? (
+					<>
+						<FlexBetween gap='0.25rem'>
+							<GifBoxOutlined sx={{ color: mediumMain }} />
+							<Typography color={mediumMain}>Clip</Typography>
+						</FlexBetween>
 
-					<FlexBetween gap='0.25rem'>
-						<AttachFileOutlined sx={{ color: mediumMain }} />
-						<Typography color={mediumMain}>Attachment</Typography>
-					</FlexBetween>
+						<FlexBetween gap='0.25rem'>
+							<AttachFileOutlined sx={{ color: mediumMain }} />
+							<Typography color={mediumMain}>Attachment</Typography>
+						</FlexBetween>
 
+						<FlexBetween gap='0.25rem'>
+							<MicOutlined sx={{ color: mediumMain }} />
+							<Typography color={mediumMain}>Audio</Typography>
+						</FlexBetween>
+					</>
+				) : (
 					<FlexBetween gap='0.25rem'>
-						<MicOutlined sx={{ color: mediumMain }} />
-						<Typography color={mediumMain}>Audio</Typography>
+						<MoreHorizOutlined sx={{ color: mediumMain }} />
 					</FlexBetween>
-				</>
+				)}
 
 				<Button
 					// disabled={!post}

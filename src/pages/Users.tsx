@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, Typography, useTheme } from '@mui/material'
+import { Box, IconButton, InputBase, Typography, useTheme } from '@mui/material'
 import Friend from '../components/Friend'
-import WidgetWrapper from '../components/WidgetWrapper'
-import { setUsers } from '../state'
+import { setSearch, setUsers } from '../state'
 import { RootState } from '../state/types'
+import { Navbar } from '../components/Navbar'
+import FlexBetween from '../components/FlexBetween'
+import { Search } from '@mui/icons-material'
 
 const Users = () => {
 	const token = useSelector((state: RootState) => state.token)
 	const users = useSelector((state: RootState) => state.users)
 	const search = useSelector((state: RootState) => state.search)
 	const dispatch = useDispatch()
-	const { palette } = useTheme<any>()
+	const theme = useTheme<any>()
+	const neutralLight = theme.palette.neutral.light
 
 	const getUsers = async () => {
 		const response = await fetch(
@@ -32,27 +35,53 @@ const Users = () => {
 	}, [search])
 
 	return (
-		<WidgetWrapper>
-			<Typography
-				color={palette.neutral.dark}
-				variant='h5'
-				fontWeight='500'
-				sx={{ mb: '1.5rem' }}
+		<>
+			<Navbar />
+			<Box
+				display='flex'
+				flexDirection='column'
+				gap='20px'
+				sx={{ padding: 0, margin: '2% 6%' }}
 			>
-				Friend List
-			</Typography>
-			<Box display='flex' flexDirection='column' gap='1.5rem'>
-				{users.map(user => (
-					<Friend
-						key={user._id}
-						friendId={user._id}
-						fullName={user.fullName}
-						avatarUrl={user.avatarUrl}
-						city={user.city}
+				<FlexBetween
+					sx={{
+						backgroundColor: neutralLight,
+					}}
+					borderRadius='9px'
+					gap='3rem'
+					padding='0.1rem 1.5rem'
+				>
+					<InputBase
+						value={search}
+						onChange={e => dispatch(setSearch(e.target.value))}
+						placeholder='Search...'
 					/>
-				))}
+					<IconButton>
+						<Search />
+					</IconButton>
+				</FlexBetween>
+				<Box
+					display='flex'
+					flexDirection='column'
+					gap='1.5rem'
+					padding='10px'
+					sx={{
+						backgroundColor: theme.palette.background.alt,
+						borderRadius: '0.75rem',
+					}}
+				>
+					{users.map(user => (
+						<Friend
+							key={user._id}
+							friendId={user._id}
+							fullName={user.fullName}
+							avatarUrl={user.avatarUrl}
+							city={user.city}
+						/>
+					))}
+				</Box>
 			</Box>
-		</WidgetWrapper>
+		</>
 	)
 }
 

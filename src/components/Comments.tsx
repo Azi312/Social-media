@@ -16,6 +16,7 @@ import FlexBetween from './FlexBetween'
 import { setPost } from '../state'
 import { RootState } from '../state/types'
 import moment from 'moment'
+import { LongMenu } from './UI/LongMenu'
 
 interface Comment {
 	postId: string
@@ -66,12 +67,44 @@ const Comments: FC<Comment> = ({ postId, avatarUrl, comments }) => {
 		}
 	}
 
+	const handleDelete = async (commentId: string) => {
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_URL}/posts/${postId}/comments/${commentId}`,
+				{
+					method: 'DELETE',
+					headers: {
+						Authorization: `Bearer ${token}`,
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						text,
+						user: {
+							id: user._id,
+							fullName: user.fullName,
+							avatarUrl: user.avatarUrl,
+						},
+					}),
+				}
+			)
+			const post = await response.json()
+			dispatch(setPost({ post }))
+		} catch (error) {
+			if (!user) {
+				alert('You need to login first')
+				return
+			}
+			console.log(error)
+			alert('Something went wrong')
+		}
+	}
+
 	return (
-		<WidgetWrapper>
+		<WidgetWrapper sx={{ padding: '1.5rem 0' }}>
 			<FlexBetween gap='1rem'>
 				<Avatar
 					alt='/broken-image.jpg'
-					src={avatarUrl}
+					src={user.avatarUrl}
 					sx={{ width: 40, height: 40 }}
 				/>
 				<InputBase
@@ -96,7 +129,8 @@ const Comments: FC<Comment> = ({ postId, avatarUrl, comments }) => {
 				display='flex'
 				flexDirection='column'
 				justifyContent='flex-start'
-				gap='1rem'
+				gap='0.5rem'
+				width='100%'
 			>
 				{comments.map((comment: any) => (
 					<FlexBetween key={comment.user.id} gap='1rem'>
@@ -105,9 +139,10 @@ const Comments: FC<Comment> = ({ postId, avatarUrl, comments }) => {
 							<Typography>{comment.user.fullName}</Typography>
 							<ListItemText>{comment.text}</ListItemText>
 						</Box>
-						<Typography flex='0 0 15%'>
-							{moment(comment.createdAt).fromNow()}
-						</Typography>
+						<Box display='flex' alignItems='center' flex='1 0 15%'>
+							<Typography>{moment(comment.createdAt).fromNow()}</Typography>
+							<LongMenu removeComment={() => handleDelete(comment._id)} />
+						</Box>
 					</FlexBetween>
 				))}
 			</Box>

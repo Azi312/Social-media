@@ -114,7 +114,7 @@ const Friend: FC<FriendProps> = ({
 					</Typography>
 				</Box>
 			</FlexBetween>
-			{userId !== friendId ? (
+			{userId !== friendId && (
 				<IconButton
 					onClick={patchFriend}
 					sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
@@ -125,17 +125,15 @@ const Friend: FC<FriendProps> = ({
 						<PersonAddOutlined sx={{ color: primaryDark }} />
 					)}
 				</IconButton>
-			) : (
+			)}
+			{postId && userId === friendId && (
 				<Button
 					onClick={removePost}
 					variant='outlined'
 					startIcon={<DeleteIcon />}
 				>
-					Delete
+					Delete post
 				</Button>
-				// <IconButton color='primary'>
-				// 	<DeleteIcon sx={{ width: '30px', height: '25px' }} />
-				// </IconButton>
 			)}
 		</FlexBetween>
 	)
